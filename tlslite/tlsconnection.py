@@ -86,6 +86,7 @@ class TLSConnection(TLSRecordLayer):
         # used only for TLS 1.2 and earlier
         self._peer_record_size_limit = None
         self._pha_supported = False
+        self.TLSServer_Server_Hello = -1
 
     def keyingMaterialExporter(self, label, length=20):
         """Return keying material as described in RFC 5705
@@ -2294,7 +2295,7 @@ class TLSConnection(TLSRecordLayer):
         serverHello.create(self.version, random, sessionID,
                            cipherSuite, CertificateType.x509, tackExt,
                            nextProtos, extensions=extensions)
-        TLSServer_Server_Hello = time_stamp()
+        self.TLSServer_Server_Hello = time_stamp()
 
         # Perform the SRP key exchange
         clientCertChain = None
@@ -2707,7 +2708,7 @@ class TLSConnection(TLSRecordLayer):
         if not self._ccs_sent and clientHello.session_id:
             ccs = ChangeCipherSpec().create()
             msgs.append(ccs)
-        TLSServer_Server_Hello = time_stamp()
+        self.TLSServer_Server_Hello = time_stamp()
         for result in self._sendMsgs(msgs):
             yield result
 
