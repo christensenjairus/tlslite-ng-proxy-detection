@@ -322,6 +322,12 @@ def handleArgs(argv, argString, flagsList=[]):
 
 
 def printGoodConnection(connection, seconds):
+    print("  Server Hello Time: " + connection.TLSServer_Server_Hello)
+    print("  Key Exchange Time: " + connection.TLSServer_Key_Exchange)
+    print("  Server Finished Time: " + connection.TLSServer_Key_Exchange)
+    print("  Client Finished Time: " + connection.TLSServer_Key_Exchange)
+    print("  Session Started Time: " + connection.TLSServer_Session + "\n")
+    
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
     print("  Cipher: %s %s" % (connection.getCipherName(), 
@@ -654,7 +660,6 @@ def serverCmd(argv):
                                               sni=sni)
                                               # As an example (does not work here):
                                               #nextProtos=[b"spdy/3", b"spdy/2", b"http/1.1"])
-                print(connection.TLSServer_Server_Hello)
                 try:
                     if request_pha:
                         for i in connection.request_post_handshake_auth():
