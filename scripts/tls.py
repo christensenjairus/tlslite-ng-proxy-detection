@@ -323,6 +323,7 @@ def handleArgs(argv, argString, flagsList=[]):
 
 def printGoodConnection(connection, seconds):
     print("  Handshake time: %.3f seconds" % seconds)
+    print("  My Data: " + connection.get_TLS_RTT_Data())
     print("  Version: %s" % connection.getVersionName())
     print("  Cipher: %s %s" % (connection.getCipherName(), 
         connection.getCipherImplementation()))
