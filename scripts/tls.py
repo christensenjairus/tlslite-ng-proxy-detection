@@ -654,6 +654,7 @@ def serverCmd(argv):
                                               sni=sni)
                                               # As an example (does not work here):
                                               #nextProtos=[b"spdy/3", b"spdy/2", b"http/1.1"])
+                print(connection.getTLSData())
                 try:
                     if request_pha:
                         for i in connection.request_post_handshake_auth():
