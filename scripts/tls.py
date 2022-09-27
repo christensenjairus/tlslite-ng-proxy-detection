@@ -326,7 +326,7 @@ def printGoodConnection(connection, seconds):
     print("  Key Exchange Time: " + str(connection.TLSServer_Key_Exchange))
     print("  Server Finished Time: " + str(connection.TLSServer_Key_Exchange))
     print("  Client Finished Time: " + str(connection.TLSServer_Key_Exchange))
-    print("  Session Started Time: " + str(connection.TLSServer_Session + "\n"))
+    print("  Session Started Time: " + str(connection.TLSServer_Session) + "\n")
 
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
