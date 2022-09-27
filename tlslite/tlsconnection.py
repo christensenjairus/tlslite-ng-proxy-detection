@@ -40,13 +40,6 @@ from .handshakehelpers import HandshakeHelpers
 from .utils.cipherfactory import createAESCCM, createAESCCM_8, \
         createAESGCM, createCHACHA20
 
-TLSServer_Client_Hello = -1
-TLSServer_Server_Hello = -1
-TLSServer_Key_Exchange = -1
-TLSServer_Finished = -1
-TLSServer_Client_Finished = -1
-TLSServer_Session = -1
-
 class TLSConnection(TLSRecordLayer):
     """
     This class wraps a socket and provides TLS handshaking and data transfer.
@@ -2164,8 +2157,6 @@ class TLSConnection(TLSRecordLayer):
                 self._handshakeDone(resumed=True)                
                 return # Handshake was resumed, we're done 
             else: break
-        global TLSServer_Client_Hello
-        TLSServer_Client_Hello = time_stamp()
         (clientHello, version, cipherSuite, sig_scheme, privateKey,
             cert_chain) = result
 
@@ -2303,7 +2294,6 @@ class TLSConnection(TLSRecordLayer):
         serverHello.create(self.version, random, sessionID,
                            cipherSuite, CertificateType.x509, tackExt,
                            nextProtos, extensions=extensions)
-        global TLSServer_Server_Hello
         TLSServer_Server_Hello = time_stamp()
 
         # Perform the SRP key exchange
@@ -2317,7 +2307,6 @@ class TLSConnection(TLSRecordLayer):
                     yield result
                 else: break
             premasterSecret, privateKey, cert_chain = result
-            global TLSServer_Key_Exchange
             TLSServer_Key_Exchange = time_stamp()
 
         # Perform a certificate-based key exchange
@@ -2371,7 +2360,6 @@ class TLSConnection(TLSRecordLayer):
                 if result in (0,1): yield result
                 else: break
             (premasterSecret, clientCertChain) = result
-            global TLSServer_Key_Exchange
             TLSServer_Key_Exchange = time_stamp()
 
         # Perform anonymous Diffie Hellman key exchange
@@ -2393,7 +2381,6 @@ class TLSConnection(TLSRecordLayer):
                 if result in (0,1): yield result
                 else: break
             premasterSecret = result
-            global TLSServer_Key_Exchange
             TLSServer_Key_Exchange = time_stamp()
 
         else:
@@ -2407,7 +2394,6 @@ class TLSConnection(TLSRecordLayer):
                 if result in (0,1): yield result
                 else: break
         masterSecret = result
-        global TLSServer_Finished
         TLSServer_Finished = time_stamp()
 
         #Create the session object
@@ -2440,8 +2426,9 @@ class TLSConnection(TLSRecordLayer):
         self._handshakeDone(resumed=False)
         self._serverRandom = serverHello.random
         self._clientRandom = clientHello.random
-        global TLSServer_Session
         TLSServer_Session = time_stamp()
+        print(TLSServer_Session - TLSServer_Server_Hello)
+        # return {TLSServer_Client_Hello, TLSServer_Server_Hello, TLSServer_Key_Exchange, TLSServer_Finished, TLSServer_Client_Finished, TLSServer_Session}
 
     def request_post_handshake_auth(self, settings=None):
         """
@@ -2720,7 +2707,6 @@ class TLSConnection(TLSRecordLayer):
         if not self._ccs_sent and clientHello.session_id:
             ccs = ChangeCipherSpec().create()
             msgs.append(ccs)
-        global TLSServer_Server_Hello
         TLSServer_Server_Hello = time_stamp()
         for result in self._sendMsgs(msgs):
             yield result
@@ -2866,7 +2852,6 @@ class TLSConnection(TLSRecordLayer):
         self._queue_message(finished)
         for result in self._queue_flush():
             yield result
-        TLSServer_Finished
         TLSServer_Finished = time_stamp()
 
         self._changeReadState()
@@ -2990,7 +2975,6 @@ class TLSConnection(TLSRecordLayer):
                     AlertDescription.decrypt_error,
                     "Finished value is not valid"):
                 yield result
-        global TLSServer_Client_Finished
         TLSServer_Client_Finished = time_stamp()
 
         # disallow CCS messages after handshake
@@ -3004,7 +2988,6 @@ class TLSConnection(TLSRecordLayer):
         self._first_handshake_hashes = self._handshake_hash.copy()
 
         self.session = Session()
-        global TLSServer_Session
         TLSServer_Session = time_stamp()
         self.extendedMasterSecret = True
         server_name = None
@@ -4487,9 +4470,6 @@ class TLSConnection(TLSRecordLayer):
         except:
             self._shutdown(False)
             raise
-
-    def get_TLS_RTT_Data():
-        return {TLSServer_Client_Hello, TLSServer_Server_Hello, TLSServer_Key_Exchange, TLSServer_Finished, TLSServer_Client_Finished, TLSServer_Session}
 
     @staticmethod
     def _pickServerKeyExchangeSig(settings, clientHello, certList=None,
