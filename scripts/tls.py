@@ -322,12 +322,12 @@ def handleArgs(argv, argString, flagsList=[]):
 
 
 def printGoodConnection(connection, seconds):
-    print("  Server Hello Time: " + connection.TLSServer_Server_Hello)
-    print("  Key Exchange Time: " + connection.TLSServer_Key_Exchange)
-    print("  Server Finished Time: " + connection.TLSServer_Key_Exchange)
-    print("  Client Finished Time: " + connection.TLSServer_Key_Exchange)
-    print("  Session Started Time: " + connection.TLSServer_Session + "\n")
-    
+    print("  Server Hello Time: " + str(connection.TLSServer_Server_Hello))
+    print("  Key Exchange Time: " + str(connection.TLSServer_Key_Exchange))
+    print("  Server Finished Time: " + str(connection.TLSServer_Key_Exchange))
+    print("  Client Finished Time: " + str(connection.TLSServer_Key_Exchange))
+    print("  Session Started Time: " + str(connection.TLSServer_Session + "\n"))
+
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
     print("  Cipher: %s %s" % (connection.getCipherName(), 
