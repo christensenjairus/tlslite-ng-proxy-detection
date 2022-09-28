@@ -322,7 +322,7 @@ def handleArgs(argv, argString, flagsList=[]):
 
 
 def printGoodConnection(connection, seconds):
-    print("  Server Hello Time: " + str(connection.TLSServer_Server_Hello) + " (baseline)")
+    print("  Server Hello Time: " + str(connection.TLSServer_Server_Hello) + " seconds since seconds clock reset (baseline)")
     print("  Key Exchange Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms later")
     print("  Server Finished Time: " + str((connection.TLSServer_Server_Finished - connection.TLSServer_Server_Hello)*1000) + " ms later")
     # print("  Client Finished Time: " + str(connection.TLSServer_Client_Finished - connection.TLSServer_Server_Hello) + " seconds later")
