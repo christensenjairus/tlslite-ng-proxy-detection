@@ -324,7 +324,7 @@ def handleArgs(argv, argString, flagsList=[]):
 def printGoodConnection(connection, seconds):
     if connection.getVersionName() == "TLS 1.3":
         now = time_stamp()
-        print("  Now: " + now + " seconds since seconds clock reset (baseline)")
+        print("  Now: " + str(now) + " seconds since seconds clock reset (baseline)")
         print("  Session Started Time: " + str((now - connection.TLSServer_Session)*1000) + " ms later\n")
         print("  TLS 1.3 RTT Time: " + str((now - connection.TLSServer_Server_Finished)*1000) + " ms (Server Finished --rtt--> ~HTTP Request)\n")
     else: # TLS 1.2
