@@ -321,13 +321,11 @@ def handleArgs(argv, argString, flagsList=[]):
     return retList
 
 
-def printGoodConnection(connection, seconds, httprequesttime):
+def printGoodConnection(connection, seconds):
     print("  Server Hello Time: " + str(connection.TLSServer_Server_Hello) + " seconds since seconds clock reset (baseline)")
     if connection.getVersionName() == "TLS 1.3":
-        print(httprequesttime)
-        print(connection.TLSServer_Server_Finished)
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello)*1000) + " ms later\n")
-        print("  TLS 1.3 RTT Time: " + str((httprequesttime - connection.TLSServer_Server_Finished)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
+        print("  TLS 1.3 RTT Time: " + str((time_stamp() - connection.TLSServer_Server_Finished)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
     else: # TLS 1.2
         print("  Key Exchange Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms later")
         print("  Server Finished Time: " + str((connection.TLSServer_Server_Finished - connection.TLSServer_Server_Hello)*1000) + " ms later")
@@ -703,7 +701,7 @@ def serverCmd(argv):
                     raise
 
             connection.ignoreAbruptClose = True
-            printGoodConnection(connection, stop-start, TLSServer_HTTP_Request)
+            printGoodConnection(connection, stop-start)
             printExporter(connection, expLabel, expLength)
             return True
 
