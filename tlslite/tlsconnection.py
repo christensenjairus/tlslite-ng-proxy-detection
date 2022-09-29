@@ -3048,6 +3048,7 @@ class TLSConnection(TLSRecordLayer):
             if result in (0,1): yield result
             else: break
         clientHello = result
+        print(clientHello)
 
         # check if the ClientHello and its extensions are well-formed
 
