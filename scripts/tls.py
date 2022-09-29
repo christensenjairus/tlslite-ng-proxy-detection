@@ -321,18 +321,17 @@ def handleArgs(argv, argString, flagsList=[]):
     return retList
 
 
-def printGoodConnection(connection, seconds):
+def printGoodConnection(connection, seconds, httprequesttime):
     print("  Server Hello Time: " + str(connection.TLSServer_Server_Hello) + " seconds since seconds clock reset (baseline)")
     if connection.getVersionName() == "TLS 1.3":
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello)*1000) + " ms later\n")
-        print("  TLS 1.3 RTT Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Finished)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
-    else:
+        print("  TLS 1.3 RTT Time: " + str((httprequesttime - connection.TLSServer_Server_Finished)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
+    else: # TLS 1.2
         print("  Key Exchange Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms later")
         print("  Server Finished Time: " + str((connection.TLSServer_Server_Finished - connection.TLSServer_Server_Hello)*1000) + " ms later")
         # print("  Client Finished Time: " + str(connection.TLSServer_Client_Finished - connection.TLSServer_Server_Hello) + " seconds later")
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello)*1000) + " ms later\n")
         print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
-        
         
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
@@ -594,10 +593,8 @@ def serverCmd(argv):
     class MySimpleHTTPHandler(SimpleHTTPRequestHandler, object):
         """Buffer the header and body of HTTP message."""
         wbufsize = -1
-        TLSServer_HTTP_Request = -1
 
         def do_GET(self):
-            self.TLSServer_HTTP_Request = time_stamp()
             """Simple override to send KeyUpdate to client."""
             if self.path.startswith('/keyupdate'):
                 for i in self.connection.send_keyupdate_request(
@@ -637,6 +634,8 @@ def serverCmd(argv):
     else:
         mixin = HTTPServer
         handler = MySimpleHTTPHandler
+        TLSServer_HTTP_Request = time_stamp()
+
 
     class MyServer(ThreadingMixIn, TLSSocketServerMixIn, mixin):
         def handshake(self, connection):
@@ -702,7 +701,7 @@ def serverCmd(argv):
                     raise
 
             connection.ignoreAbruptClose = True
-            printGoodConnection(connection, stop-start)
+            printGoodConnection(connection, stop-start, TLSServer_HTTP_Request)
             printExporter(connection, expLabel, expLength)
             return True
 
