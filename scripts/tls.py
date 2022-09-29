@@ -331,7 +331,7 @@ def printGoodConnection(connection, seconds):
         print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
     else:
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello)*1000) + " ms later\n")
-        print("  TLS 1.3 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
+        print("  TLS 1.3 RTT Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Finished)*1000) + " ms (Server Hello --rtt--> Key Exchange(changeCipherSpec))\n")
 
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
@@ -593,8 +593,10 @@ def serverCmd(argv):
     class MySimpleHTTPHandler(SimpleHTTPRequestHandler, object):
         """Buffer the header and body of HTTP message."""
         wbufsize = -1
+        TLSServer_HTTP_Request = -1
 
         def do_GET(self):
+            self.TLSServer_HTTP_Request = time_stamp()
             """Simple override to send KeyUpdate to client."""
             if self.path.startswith('/keyupdate'):
                 for i in self.connection.send_keyupdate_request(
