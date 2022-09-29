@@ -87,6 +87,7 @@ class TLSConnection(TLSRecordLayer):
         self._peer_record_size_limit = None
         self._pha_supported = False
         self.TLSServer_Server_Hello = -1
+        self.TLSServer_Server_Hello_Done = -1
         self.TLSServer_Key_Exchange = -1
         self.TLSServer_Server_Finished = -1
         self.TLSServer_Client_Finished = -1  # TODO: still needs to be included in either 1.2 or 1.3 
@@ -3048,7 +3049,6 @@ class TLSConnection(TLSRecordLayer):
             if result in (0,1): yield result
             else: break
         clientHello = result
-        print(clientHello)
 
         # check if the ClientHello and its extensions are well-formed
 
@@ -4122,6 +4122,7 @@ class TLSConnection(TLSRecordLayer):
                                       valid_sig_algs)
             msgs.append(certificateRequest)
         msgs.append(ServerHelloDone())
+        self.TLSServer_Server_Hello_Done = time_stamp()
         for result in self._sendMsgs(msgs):
             yield result
 
