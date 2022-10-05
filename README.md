@@ -5,20 +5,26 @@ tlslite-ng version 0.8.0-alpha43 (2022-05-11)
 [![Coverage Status](https://coveralls.io/repos/tlsfuzzer/tlslite-ng/badge.svg?branch=master)](https://coveralls.io/r/tlsfuzzer/tlslite-ng?branch=master)
 [![Code Climate](https://codeclimate.com/github/tlsfuzzer/tlslite-ng/badges/gpa.svg)](https://codeclimate.com/github/tlsfuzzer/tlslite-ng)
 
+For Sandia Capstone group:
+* Edit the `/tests/httpsserver.sh` to have the right interface for inbound communication. `localhost` won't work (atleast not on Manjaro)
+* To run latest commit, go into /tests directory and run `cd .. && git pull && sudo make install && cd ./tests && ./httpsserver.sh`
+* To commit, run `git add .\tlslite\tlsconnection.py .\scripts\tls.py; git commit -m "<commit name>"; git push`
+
+
 Table of Contents
 ==================
 
 1. Introduction
-1. License/Acknowledgements
-1. Installation
-1. Getting Started with the Command-Line Tools
-1. Getting Started with the Library
-1. Using tlslite-ng with httplib
-1. Using tlslite-ng with poplib or imaplib
-1. Using tlslite-ng with smtplib
-1. Using tlslite-ng with SocketServer
-1. Using tlslite-ng with asyncore
-1. History
+2. License/Acknowledgements
+3. Installation
+4. Getting Started with the Command-Line Tools
+5. Getting Started with the Library
+6. Using tlslite-ng with httplib
+7. Using tlslite-ng with poplib or imaplib
+8. Using tlslite-ng with smtplib
+9. Using tlslite-ng with SocketServer
+10. Using tlslite-ng with asyncore
+11. History
 
 1 Introduction
 ===============
