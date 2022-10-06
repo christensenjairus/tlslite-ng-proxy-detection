@@ -336,56 +336,50 @@ def printGoodConnection(connection, seconds):
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello_Done)*1000) + " ms later\n")
         print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)")
 
-    start = time_stamp()
-    import os
-    result = os.system("ping -c 1 " + connection.session.serverName)
-    duration = time_stamp() - start
-    print("Ping Duration: " + str(duration*1000) + "\n")
-
-    print("  Handshake time: %.3f seconds" % seconds)
-    print("  Version: %s" % connection.getVersionName())
-    print("  Cipher: %s %s" % (connection.getCipherName(), 
-        connection.getCipherImplementation()))
-    print("  Ciphersuite: {0}".\
-            format(CipherSuite.ietfNames[connection.session.cipherSuite]))
-    if connection.session.srpUsername:
-        print("  Client SRP username: %s" % connection.session.srpUsername)
-    if connection.session.clientCertChain:
-        print("  Client X.509 SHA1 fingerprint: %s" % 
-            connection.session.clientCertChain.getFingerprint())
-    else:
-        print("  No client certificate provided by peer")
-    if connection.session.serverCertChain:
-        print("  Server X.509 SHA1 fingerprint: %s" % 
-            connection.session.serverCertChain.getFingerprint())
-    if connection.version >= (3, 3) and connection.serverSigAlg is not None:
-        scheme = SignatureScheme.toRepr(connection.serverSigAlg)
-        if scheme is None:
-            scheme = "{1}+{0}".format(
-                HashAlgorithm.toStr(connection.serverSigAlg[0]),
-                SignatureAlgorithm.toStr(connection.serverSigAlg[1]))
-        print("  Key exchange signature: {0}".format(scheme))
-    if connection.ecdhCurve is not None:
-        print("  Group used for key exchange: {0}".format(\
-                GroupName.toStr(connection.ecdhCurve)))
-    if connection.dhGroupSize is not None:
-        print("  DH group size: {0} bits".format(connection.dhGroupSize))
-    if connection.session.serverName:
-        print("  SNI: %s" % connection.session.serverName)
-    if connection.session.tackExt:   
-        if connection.session.tackInHelloExt:
-            emptyStr = "\n  (via TLS Extension)"
-        else:
-            emptyStr = "\n  (via TACK Certificate)" 
-        print("  TACK: %s" % emptyStr)
-        print(str(connection.session.tackExt))
-    if connection.session.appProto:
-        print("  Application Layer Protocol negotiated: {0}".format(
-            connection.session.appProto.decode('utf-8')))
-    print("  Next-Protocol Negotiated: %s" % connection.next_proto) 
-    print("  Encrypt-then-MAC: {0}".format(connection.encryptThenMAC))
-    print("  Extended Master Secret: {0}".format(
-                                               connection.extendedMasterSecret))
+    # print("  Handshake time: %.3f seconds" % seconds)
+    # print("  Version: %s" % connection.getVersionName())
+    # print("  Cipher: %s %s" % (connection.getCipherName(), 
+    #     connection.getCipherImplementation()))
+    # print("  Ciphersuite: {0}".\
+    #         format(CipherSuite.ietfNames[connection.session.cipherSuite]))
+    # if connection.session.srpUsername:
+    #     print("  Client SRP username: %s" % connection.session.srpUsername)
+    # if connection.session.clientCertChain:
+    #     print("  Client X.509 SHA1 fingerprint: %s" % 
+    #         connection.session.clientCertChain.getFingerprint())
+    # else:
+    #     print("  No client certificate provided by peer")
+    # if connection.session.serverCertChain:
+    #     print("  Server X.509 SHA1 fingerprint: %s" % 
+    #         connection.session.serverCertChain.getFingerprint())
+    # if connection.version >= (3, 3) and connection.serverSigAlg is not None:
+    #     scheme = SignatureScheme.toRepr(connection.serverSigAlg)
+    #     if scheme is None:
+    #         scheme = "{1}+{0}".format(
+    #             HashAlgorithm.toStr(connection.serverSigAlg[0]),
+    #             SignatureAlgorithm.toStr(connection.serverSigAlg[1]))
+    #     print("  Key exchange signature: {0}".format(scheme))
+    # if connection.ecdhCurve is not None:
+    #     print("  Group used for key exchange: {0}".format(\
+    #             GroupName.toStr(connection.ecdhCurve)))
+    # if connection.dhGroupSize is not None:
+    #     print("  DH group size: {0} bits".format(connection.dhGroupSize))
+    # if connection.session.serverName:
+    #     print("  SNI: %s" % connection.session.serverName)
+    # if connection.session.tackExt:   
+    #     if connection.session.tackInHelloExt:
+    #         emptyStr = "\n  (via TLS Extension)"
+    #     else:
+    #         emptyStr = "\n  (via TACK Certificate)" 
+    #     print("  TACK: %s" % emptyStr)
+    #     print(str(connection.session.tackExt))
+    # if connection.session.appProto:
+    #     print("  Application Layer Protocol negotiated: {0}".format(
+    #         connection.session.appProto.decode('utf-8')))
+    # print("  Next-Protocol Negotiated: %s" % connection.next_proto) 
+    # print("  Encrypt-then-MAC: {0}".format(connection.encryptThenMAC))
+    # print("  Extended Master Secret: {0}".format(
+    #                                            connection.extendedMasterSecret))
 
 def printExporter(connection, expLabel, expLength):
     if expLabel is None:
@@ -711,6 +705,7 @@ def serverCmd(argv):
 
             connection.ignoreAbruptClose = True
             printGoodConnection(connection, stop-start)
+            print(self.client.address[0])
             printExporter(connection, expLabel, expLength)
             return True
 
