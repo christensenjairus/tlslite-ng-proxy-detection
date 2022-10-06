@@ -335,7 +335,11 @@ def printGoodConnection(connection, seconds):
         # print("  Client Finished Time: " + str(connection.TLSServer_Client_Finished - connection.TLSServer_Server_Hello) + " seconds later")
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello_Done)*1000) + " ms later\n")
         print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)\n")
-        
+
+    start = time.time()
+    result = ping_host(connection.session.serverName)
+    duration = time.time() - start
+
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
     print("  Cipher: %s %s" % (connection.getCipherName(), 
