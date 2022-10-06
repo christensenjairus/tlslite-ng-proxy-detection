@@ -327,18 +327,19 @@ def printGoodConnection(connection, seconds):
         # print("  Now: " + str(now) + " seconds since seconds clock reset (baseline)")
         # print("  Session Started Time: " + str((now - connection.TLSServer_Session)*1000) + " ms later\n")
         # print("  TLS 1.3 RTT Time: " + str((now - connection.TLSServer_Server_Finished)*1000) + " ms (Server Finished --rtt--> ~HTTP Request)\n")
-        print("  TLS 1.3 RTT Time: " + str((connection.TLSServer_Client_Finished - connection.TLSServer_Server_Finished)*1000) + " ms (Server Finished Sent --rtt--> Client Finished Recieved)\n")
+        print("  TLS 1.3 RTT Time: " + str((connection.TLSServer_Client_Finished - connection.TLSServer_Server_Finished)*1000) + " ms (Server Finished Sent --rtt--> Client Finished Recieved)")
     else: # TLS 1.2
         print("  Server Hello Done Time: " + str(connection.TLSServer_Server_Hello_Done) + " seconds since seconds clock reset (baseline)")
         print("  Key Exchange Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms later")
         print("  Server Finished Time: " + str((connection.TLSServer_Server_Finished - connection.TLSServer_Server_Hello_Done)*1000) + " ms later")
         # print("  Client Finished Time: " + str(connection.TLSServer_Client_Finished - connection.TLSServer_Server_Hello) + " seconds later")
         print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello_Done)*1000) + " ms later\n")
-        print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)\n")
+        print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)")
 
-    start = time.time()
+    start = time_stamp()
     result = ping_host(connection.session.serverName)
-    duration = time.time() - start
+    duration = time_stamp() - start
+    print("Ping Duration: " + str(duration*1000) + "\n")
 
     print("  Handshake time: %.3f seconds" % seconds)
     print("  Version: %s" % connection.getVersionName())
