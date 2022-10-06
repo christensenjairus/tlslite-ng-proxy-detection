@@ -708,8 +708,6 @@ def serverCmd(argv):
             printExporter(connection, expLabel, expLength)
             return True
 
-        print(self.client_address)
-
     server = MyServer(address, handler)
     server.serve_forever()
 
