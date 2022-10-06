@@ -337,7 +337,8 @@ def printGoodConnection(connection, seconds):
         print("  TLS 1.2 RTT Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)")
 
     start = time_stamp()
-    result = ping_host(connection.session.serverName)
+    import os
+    result = os.system("ping -c 1 " + connection.session.serverName)
     duration = time_stamp() - start
     print("Ping Duration: " + str(duration*1000) + "\n")
 
