@@ -9,6 +9,15 @@ For Sandia Capstone group:
 * Edit the `/tests/httpsserver.sh` to have the right interface for inbound communication. `localhost` won't work (atleast not on Manjaro)
 * To run latest commit, go into /tests directory and run `cd .. && git pull && sudo make install && cd ./tests && ./httpsserver.sh`
 * To commit, run `git add .\tlslite\tlsconnection.py .\scripts\tls.py; git commit -m "<commit name>"; git push`
+* To connect to webserver in TLS 1.3 via shell: `curl --insecure <url>`
+* To connect to webserver in TLS 1.2 via shell: `curl --tlsv1.2 --tls-max 1.2 --insecure <url>`
+* To connect to webserver in TLS 1.3 via browser: visit https url
+* To connect to webserver in TLS 1.2 via firefox browser:
+  * Enter `about:config` into address bar and go to it
+  * Search `tls` in search bar
+  * Set `security.tls.version.max` to `3`
+  * Visit https url
+  * Don't forget to revert this change when done
 
 
 Table of Contents
