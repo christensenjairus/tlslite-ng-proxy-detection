@@ -38,6 +38,7 @@ from tlslite.utils.compat import b2a_hex, a2b_hex, time_stamp
 from tlslite.utils.dns_utils import is_valid_hostname
 from tlslite.utils.cryptomath import getRandomBytes
 from tlslite.constants import KeyUpdateMessageType
+from datetime import datetime
 
 try:
     from tack.structures.Tack import Tack
@@ -322,64 +323,64 @@ def handleArgs(argv, argString, flagsList=[]):
 
 
 def printGoodConnection(connection, seconds):
-    if connection.getVersionName() == "TLS 1.3":
-        now = time_stamp()
+	current_time = datetime.now().strftime("%H:%M:%S")
+	rttlog = open("rtt.log", "a")
+	if connection.getVersionName() == "TLS 1.3":
+		now = time_stamp()
         # print("  Now: " + str(now) + " seconds since seconds clock reset (baseline)")
         # print("  Session Started Time: " + str((now - connection.TLSServer_Session)*1000) + " ms later\n")
         # print("  TLS 1.3 RTT Time: " + str((now - connection.TLSServer_Server_Finished)*1000) + " ms (Server Finished --rtt--> ~HTTP Request)\n")
-        print("    TLS 1.3 RTT Time: " + str(round((connection.TLSServer_Client_Finished - connection.TLSServer_Server_Finished)*1000, 2)) + " ms (Server Finished Sent --rtt--> Client Finished Recieved)")
-    else: # TLS 1.2
+		print("  TLS 1.3 RTT Time: " + str(round((connection.TLSServer_Client_Finished - connection.TLSServer_Server_Finished)*1000, 2)) + " ms (Server Finished Sent --rtt--> Client Finished Recieved)")
+		rttlog.write(current_time + "--->TLS 1.3 RTT Time: " + str(round((connection.TLSServer_Client_Finished - connection.TLSServer_Server_Finished)*1000, 2)) + " ms (Server Finished Sent --rtt--> Client Finished Recieved)\n")
+	else: # TLS 1.2
         # print("  Server Hello Done Time: " + str(connection.TLSServer_Server_Hello_Done) + " seconds since seconds clock reset (baseline)")
         # print("  Key Exchange Time: " + str((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000) + " ms later")
         # print("  Server Finished Time: " + str((connection.TLSServer_Server_Finished - connection.TLSServer_Server_Hello_Done)*1000) + " ms later")
         # # print("  Client Finished Time: " + str(connection.TLSServer_Client_Finished - connection.TLSServer_Server_Hello) + " seconds later")
         # print("  Session Started Time: " + str((connection.TLSServer_Session - connection.TLSServer_Server_Hello_Done)*1000) + " ms later\n")
-        print("     TLS 1.2 RTT Time: " + str(round((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000, 2)) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)")
+		print("  TLS 1.2 RTT Time: " + str(round((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000, 2)) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)")
+		rttlog.write(current_time + "--->TLS 1.2 RTT Time: " + str(round((connection.TLSServer_Key_Exchange - connection.TLSServer_Server_Hello_Done)*1000, 2)) + " ms (Server Hello Done Sent --rtt--> Key Exchange(changeCipherSpec) Recieved)\n")
+	rttlog.close()
 
-    # print("  Handshake time: %.3f seconds" % seconds)
-    # print("  Version: %s" % connection.getVersionName())
-    # print("  Cipher: %s %s" % (connection.getCipherName(), 
-    #     connection.getCipherImplementation()))
-    # print("  Ciphersuite: {0}".\
-    #         format(CipherSuite.ietfNames[connection.session.cipherSuite]))
-    # if connection.session.srpUsername:
-    #     print("  Client SRP username: %s" % connection.session.srpUsername)
-    # if connection.session.clientCertChain:
-    #     print("  Client X.509 SHA1 fingerprint: %s" % 
-    #         connection.session.clientCertChain.getFingerprint())
-    # else:
-    #     print("  No client certificate provided by peer")
-    # if connection.session.serverCertChain:
-    #     print("  Server X.509 SHA1 fingerprint: %s" % 
-    #         connection.session.serverCertChain.getFingerprint())
-    # if connection.version >= (3, 3) and connection.serverSigAlg is not None:
-    #     scheme = SignatureScheme.toRepr(connection.serverSigAlg)
-    #     if scheme is None:
-    #         scheme = "{1}+{0}".format(
-    #             HashAlgorithm.toStr(connection.serverSigAlg[0]),
-    #             SignatureAlgorithm.toStr(connection.serverSigAlg[1]))
-    #     print("  Key exchange signature: {0}".format(scheme))
-    # if connection.ecdhCurve is not None:
-    #     print("  Group used for key exchange: {0}".format(\
-    #             GroupName.toStr(connection.ecdhCurve)))
-    # if connection.dhGroupSize is not None:
-    #     print("  DH group size: {0} bits".format(connection.dhGroupSize))
-    # if connection.session.serverName:
-    #     print("  SNI: %s" % connection.session.serverName)
-    # if connection.session.tackExt:   
-    #     if connection.session.tackInHelloExt:
-    #         emptyStr = "\n  (via TLS Extension)"
-    #     else:
-    #         emptyStr = "\n  (via TACK Certificate)" 
-    #     print("  TACK: %s" % emptyStr)
-    #     print(str(connection.session.tackExt))
-    # if connection.session.appProto:
-    #     print("  Application Layer Protocol negotiated: {0}".format(
-    #         connection.session.appProto.decode('utf-8')))
-    # print("  Next-Protocol Negotiated: %s" % connection.next_proto) 
-    # print("  Encrypt-then-MAC: {0}".format(connection.encryptThenMAC))
-    # print("  Extended Master Secret: {0}".format(
-    #                                            connection.extendedMasterSecret))
+	print("  Handshake time: %.3f seconds" % seconds)
+	print("  Version: %s" % connection.getVersionName())
+	print("  Cipher: %s %s" % (connection.getCipherName(), 
+		connection.getCipherImplementation()))
+	print("  Ciphersuite: {0}".format(CipherSuite.ietfNames[connection.session.cipherSuite]))
+	if connection.session.srpUsername:
+		print("  Client SRP username: %s" % connection.session.srpUsername)
+	if connection.session.clientCertChain:
+		print("  Client X.509 SHA1 fingerprint: %s" % connection.session.clientCertChain.getFingerprint())
+	else:
+		print("  No client certificate provided by peer")
+	if connection.session.serverCertChain:
+		print("  Server X.509 SHA1 fingerprint: %s" % connection.session.serverCertChain.getFingerprint())
+	if connection.version >= (3, 3) and connection.serverSigAlg is not None:
+		scheme = SignatureScheme.toRepr(connection.serverSigAlg)
+		if scheme is None:
+			scheme = "{1}+{0}".format(
+				HashAlgorithm.toStr(connection.serverSigAlg[0]),
+				SignatureAlgorithm.toStr(connection.serverSigAlg[1]))
+		print("  Key exchange signature: {0}".format(scheme))
+	if connection.ecdhCurve is not None:
+		print("  Group used for key exchange: {0}".format(GroupName.toStr(connection.ecdhCurve)))
+	if connection.dhGroupSize is not None:
+		print("  DH group size: {0} bits".format(connection.dhGroupSize))
+	if connection.session.serverName:
+		print("  SNI: %s" % connection.session.serverName)
+	if connection.session.tackExt:   
+		if connection.session.tackInHelloExt:
+			emptyStr = "\n  (via TLS Extension)"
+		else:
+			emptyStr = "\n  (via TACK Certificate)" 
+		print("  TACK: %s" % emptyStr)
+		print(str(connection.session.tackExt))
+	if connection.session.appProto:
+		print("  Application Layer Protocol negotiated: {0}".format(
+			connection.session.appProto.decode('utf-8')))
+	print("  Next-Protocol Negotiated: %s" % connection.next_proto) 
+	print("  Encrypt-then-MAC: {0}".format(connection.encryptThenMAC))
+	print("  Extended Master Secret: {0}".format(connection.extendedMasterSecret))
 
 def printExporter(connection, expLabel, expLength):
     if expLabel is None:
