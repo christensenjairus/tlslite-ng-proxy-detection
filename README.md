@@ -18,6 +18,16 @@ For Sandia Capstone group:
   * Set `security.tls.version.max` to `3`
   * Visit https url
   * Don't forget to revert this change when done
+* When creating a server for testing...
+  * `sudo apt update`
+  * `sudo apt upgrade -y`
+  * `sudo apt install wget curl`
+  * Clone repo and run `/tests/thousandQueries.sh` while changing the sleep time in the script to be slightly longer that query will take to complete. 1s is safe, but slower. 
+  * Install Wireguard as server...
+    * `sudo su`
+    * `export SERVER_HOST=<public IP>`
+    * `export PRIVATE_SUBNET=192.168.<different int for every server>.0/24`
+    * `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh`
 
 
 Table of Contents
