@@ -26,6 +26,7 @@ For Sandia Capstone group:
   * Install Wireguard as server...
     * `sudo su`
     * `export SERVER_HOST=<public IP>`
+    * `export SERVER_PORT=5150
     * `export PRIVATE_SUBNET=192.168.<different int for every server>.0/24`
     * `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh`
 
