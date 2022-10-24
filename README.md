@@ -37,6 +37,7 @@ For Sandia Capstone group:
     * These rules are used to keep SSH open for testing and not route it through wireguard
   * Run the client with `wg-quick up ./<name>.conf`
   * Stop the client with `wg-quick down ./<name>.conf`
+* To take stats from test, on the server, run `/tests/statsOfRttLog.sh && mv rtt.log <nameOfTest>.log`
 
 
 Table of Contents
