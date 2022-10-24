@@ -21,7 +21,7 @@ For Sandia Capstone group:
 * When creating a server for testing...
   * `sudo apt update`
   * `sudo apt upgrade -y`
-  * `sudo apt install wget curl`
+  * `sudo apt install wget curl resolvconf`
   * Clone repo and run `/tests/thousandQueries.sh` while changing the sleep time in the script to be slightly longer that query will take to complete. 1s is safe, but slower. 
   * Install Wireguard as server...
     * `sudo su`
