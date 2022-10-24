@@ -36,6 +36,7 @@ For Sandia Capstone group:
     * `PreDown = ip rule del from <x.x.x.x local ens4 IP> table main`
     * These rules are used to keep SSH open for testing and not route it through wireguard
   * Run the client with `wg-quick up ./<name>.conf`
+  * Stop the client with `wg-quick down ./<name>.conf`
 
 
 Table of Contents
