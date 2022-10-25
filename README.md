@@ -22,6 +22,7 @@ For Sandia Capstone group:
   * `sudo apt update`
   * `sudo apt upgrade -y`
   * `sudo apt install wget curl resolvconf`
+  * Run `sudo visudo` and add this line: `<your username>       ALL = NOPASSWD : ALL`
   * Clone repo and run `/tests/thousandQueries.sh` while changing the sleep time in the script to be slightly longer that query will take to complete. 1s is safe, but slower. 
   * Install Wireguard as server...
     * `sudo su`
