@@ -29,6 +29,15 @@ For Sandia Capstone group:
     * `export SERVER_PORT=5150`
     * `export PRIVATE_SUBNET=192.168.<different int for every server>.0/24`
     * `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh`
+  * To run wireguard as a client, make a config on the server by running the same `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh` as before, but selecting "Add WireGuard Client"
+  * Copy the config to the client computer.
+  * Add these rules to the config under the `[interface]` section
+    * `PostUp = ip rule add from <x.x.x.x local ens4 IP> table main`
+    * `PreDown = ip rule del from <x.x.x.x local ens4 IP> table main`
+    * These rules are used to keep SSH open for testing and not route it through wireguard
+  * Run the client with `wg-quick up ./<name>.conf`
+  * Stop the client with `wg-quick down ./<name>.conf`
+* To take stats from test, on the server, run `/tests/statsOfRttLog.sh && mv rtt.log <nameOfTest>.log`
 
 
 Table of Contents
