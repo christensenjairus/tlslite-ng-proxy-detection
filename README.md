@@ -39,6 +39,7 @@ For Sandia Capstone group:
   * Run the client with `wg-quick up ./<name>.conf`
   * Stop the client with `wg-quick down ./<name>.conf`
 * To take stats from test, on the server, run `/tests/statsOfRttLog.sh && mv rtt.log <nameOfTest>.log`
+* See real time of rtt.log with `tail -f ./rtt.log`
 
 
 Table of Contents
