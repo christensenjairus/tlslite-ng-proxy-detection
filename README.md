@@ -18,26 +18,6 @@ For Sandia Capstone group:
   * Set `security.tls.version.max` to `3`
   * Visit https url
   * Don't forget to revert this change when done
-* When creating a server for testing...
-  * `sudo apt update`
-  * `sudo apt upgrade -y`
-  * `sudo apt install wget curl resolvconf`
-  * Run `sudo visudo` and add this line: `<your username>       ALL = NOPASSWD : ALL`
-  * Clone repo and run `/tests/thousandQueries.sh` while changing the sleep time in the script to be slightly longer that query will take to complete. 1s is safe, but slower. 
-  * Install Wireguard as server...
-    * `sudo su`
-    * `export SERVER_HOST=<public IP>`
-    * `export SERVER_PORT=5150`
-    * `export PRIVATE_SUBNET=192.168.<different int for every server>.0/24`
-    * `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh`
-  * To run wireguard as a client, make a config on the server by running the same `wget http://git.io/Jff1k -qO wg.sh && bash wg.sh` as before, but selecting "Add WireGuard Client"
-  * Copy the config to the client computer.
-  * Add these rules to the config under the `[interface]` section
-    * `PostUp = ip rule add from <x.x.x.x local ens4 IP> table main`
-    * `PreDown = ip rule del from <x.x.x.x local ens4 IP> table main`
-    * These rules are used to keep SSH open for testing and not route it through wireguard
-  * Run the client with `wg-quick up ./<name>.conf`
-  * Stop the client with `wg-quick down ./<name>.conf`
 * To take stats from test, on the server, run `/tests/statsOfRttLog.sh && mv rtt.log <nameOfTest>.log`
 * See real time of rtt.log with `tail -f ./rtt.log`
 
